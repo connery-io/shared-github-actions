@@ -1,0 +1,22 @@
+name: Cancel infrastructure update
+
+inputs:
+  microservice-name:
+    description: Microservice short name
+    required: true
+  environment:
+    description: Environment
+    required: true
+  cf-stack-name-suffix:
+    description: CloudFormation stack name suffix with trailing '-' (e.g. -database)
+    required: false
+    default: ''
+
+runs:
+  using: composite
+  steps:
+    - name: Cancel infrastructure update
+      shell: bash
+      run: |
+        aws cloudformation cancel-update-stack --stack-name ${{ format('{0}-{1}{2}', inputs.microservice-name, inputs.environment, inputs.cf-stack-name-suffix) }}
+        aws cloudformation wait stack-rollback-complete --stack-name ${{ format('{0}-{1}{2}', inputs.microservice-name, inputs.environment, inputs.cf-stack-name-suffix) }}

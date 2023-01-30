@@ -1,0 +1,49 @@
+name: Deploy infrastructure
+
+inputs:
+  microservice-name:
+    description: Microservice short name
+    required: true
+  environment:
+    description: Environment
+    required: true
+  cf-stack-name-suffix:
+    description: CloudFormation stack suffix with trailing '-' (e.g. -database)
+    required: false
+    default: ''
+  cf-template-path:
+    description: CloudFormation template path in the repository (e.g. ./infrastructure/infrastructure.yml)
+    required: false
+    default: './infrastructure/infrastructure.yml'
+  cf-parameters:
+    description: CloudFormation parameters divided by whitespace (e.g. ImageTag=123 CustomParameter=value)
+    required: false
+    default: ''
+  aws-region:
+    description: AWS region
+    type: string
+    required: false
+    default: eu-central-1
+
+runs:
+  using: composite
+  steps:
+    - name: Package infrastructure
+      shell: bash
+      run: |
+        aws cloudformation package \
+          --template-file ${{ inputs.cf-template-path }} \
+          --s3-bucket connery-cloud-formation-artifacts-bucket-${{ inputs.aws-region }} \
+          --s3-prefix ${{ inputs.microservice-name }} \
+          --output-template-file ./infrastructure/compiled.yml
+
+    - name: Deploy infrastructure
+      shell: bash
+      run: |
+        aws cloudformation deploy \
+          --template-file ./infrastructure/compiled.yml \
+          --stack-name ${{ format('{0}-{1}{2}', inputs.microservice-name, inputs.environment, inputs.cf-stack-name-suffix) }} \
+          --s3-bucket connery-cloud-formation-artifacts-bucket-${{ inputs.aws-region }} \
+          --s3-prefix ${{ inputs.microservice-name }} \
+          --parameter-overrides Environment=${{ inputs.environment }} ${{ inputs.cf-parameters }} \
+          --capabilities CAPABILITY_IAM
