@@ -43,7 +43,7 @@ jobs:
       
       - name: Describe infrastructure events
         if: failure()
-        uses: connery-io/shared-github-actions/describe-infrastructure-events@master
+        uses: connery-io/shared-github-actions/describe-infrastructure-events@main
         with:
           microservice-name: ${{ inputs.microservice-name }}
           environment: ${{ inputs.environment }}
