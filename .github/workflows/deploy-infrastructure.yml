@@ -15,17 +15,17 @@ on:
         description: CloudFormation stack name suffix with trailing '-' (e.g. -database)
         type: string
         required: false
-        default: ''
+        default: ""
       cf-template-path:
         description: CloudFormation template path in the repository (e.g. ./infrastructure/infrastructure.yml)
         type: string
         required: false
-        default: './infrastructure/infrastructure.yml'
+        default: "./infrastructure/infrastructure.yml"
       cf-parameters:
         description: CloudFormation parameters divided by whitespace, Infrastructure parameter should not be specified (e.g. ImageTag=123 CustomParameter=value)
         type: string
         required: false
-        default: ''
+        default: ""
       aws-region:
         description: AWS region
         type: string
@@ -38,7 +38,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1-node16 # TODO: update to v2 when available
+        uses: aws-actions/configure-aws-credentials@v2
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
