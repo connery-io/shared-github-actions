@@ -2,7 +2,7 @@ name: Describe infrastructure events
 
 inputs:
   short-service-name:
-    description: Microservice short name
+    description: Short service name
     required: true
   environment:
     description: Environment

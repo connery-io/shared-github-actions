@@ -4,7 +4,7 @@ on:
   workflow_call:
     inputs:
       short-service-name:
-        description: Microservice short name
+        description: Short service name
         type: string
         required: true
       environment:
@@ -19,8 +19,7 @@ on:
       cf-template-path:
         description: CloudFormation template path in the repository (e.g. ./infrastructure/infrastructure.yml)
         type: string
-        required: false
-        default: "./infrastructure/infrastructure.yml"
+        required: true
       cf-parameters:
         description: CloudFormation parameters divided by whitespace, Infrastructure parameter should not be specified (e.g. ImageTag=123 CustomParameter=value)
         type: string

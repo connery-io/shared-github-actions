@@ -2,7 +2,7 @@ name: Deploy infrastructure
 
 inputs:
   short-service-name:
-    description: Microservice short name
+    description: Short service name
     required: true
   environment:
     description: Environment
@@ -12,9 +12,8 @@ inputs:
     required: false
     default: ""
   cf-template-path:
-    description: CloudFormation template path in the repository (e.g. ./infrastructure/infrastructure.yml)
-    required: false
-    default: "./infrastructure/infrastructure.yml"
+    description: CloudFormation template path in the repository (e.g. ./infrastructure/service.yml)
+    required: true
   cf-parameters:
     description: CloudFormation parameters divided by whitespace (e.g. ImageTag=123 CustomParameter=value)
     required: false
@@ -22,8 +21,7 @@ inputs:
   aws-region:
     description: AWS region
     type: string
-    required: false
-    default: eu-central-1
+    required: true
 
 runs:
   using: composite

@@ -4,7 +4,7 @@ on:
   workflow_call:
     inputs:
       short-service-name:
-        description: Microservice short name
+        description: Short service name
         type: string
         required: true
       environment:
@@ -20,6 +20,11 @@ on:
         description: ECR repository
         type: string
         required: true
+      aws-region:
+        description: AWS region
+        type: string
+        required: false
+        default: eu-central-1
 
 jobs:
   deploy-service-infrastructure:
@@ -31,7 +36,7 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: eu-central-1
+          aws-region: ${{ inputs.aws-region }}
 
       - name: Checkout
         uses: actions/checkout@v3
@@ -54,7 +59,9 @@ jobs:
           short-service-name: ${{ inputs.short-service-name }}
           environment: ${{ inputs.environment }}
           cf-stack-name-suffix: ${{ inputs.cf-stack-name-suffix }}
+          cf-template-path: ./infrastructure/service.yml
           cf-parameters: ImageTag=${{ steps.get-current-commit-hash.outputs.commit-hash }}
+          aws-region: ${{ inputs.aws-region }}
 
       - name: Describe infrastructure events
         if: failure()
