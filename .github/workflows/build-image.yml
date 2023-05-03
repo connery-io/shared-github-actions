@@ -48,9 +48,9 @@ jobs:
         run: |
           docker pull $BRANCH_NAME_TAG || true
           docker build \
-            -t COMMIT_HASH_TAG \
+            -t $COMMIT_HASH_TAG \
             -t $BRANCH_NAME_TAG \
             --cache-from $BRANCH_NAME_TAG \
             ${{ inputs.docker-path }}
-          docker push COMMIT_HASH_TAG
+          docker push $COMMIT_HASH_TAG
           docker push $BRANCH_NAME_TAG
