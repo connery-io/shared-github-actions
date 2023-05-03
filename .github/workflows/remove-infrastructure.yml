@@ -3,7 +3,7 @@ name: Remove infrastructure
 on:
   workflow_call:
     inputs:
-      microservice-name:
+      short-service-name:
         description: Microservice short name
         type: string
         required: true
@@ -38,13 +38,13 @@ jobs:
         timeout-minutes: 15
         shell: bash
         run: |
-          aws cloudformation delete-stack --stack-name ${{ format('{0}-{1}{2}', inputs.microservice-name, inputs.environment, inputs.cf-stack-name-suffix) }}
-          aws cloudformation wait stack-delete-complete --stack-name ${{ format('{0}-{1}{2}', inputs.microservice-name, inputs.environment, inputs.cf-stack-name-suffix) }}
+          aws cloudformation delete-stack --stack-name ${{ format('{0}-{1}{2}', inputs.short-service-name, inputs.environment, inputs.cf-stack-name-suffix) }}
+          aws cloudformation wait stack-delete-complete --stack-name ${{ format('{0}-{1}{2}', inputs.short-service-name, inputs.environment, inputs.cf-stack-name-suffix) }}
 
       - name: Describe infrastructure events
         if: failure()
         uses: connery-io/shared-github-actions/describe-infrastructure-events@main
         with:
-          microservice-name: ${{ inputs.microservice-name }}
+          short-service-name: ${{ inputs.short-service-name }}
           environment: ${{ inputs.environment }}
           cf-stack-name-suffix: ${{ inputs.cf-stack-name-suffix }}

@@ -1,7 +1,7 @@
 name: Describe infrastructure events
 
 inputs:
-  microservice-name:
+  short-service-name:
     description: Microservice short name
     required: true
   environment:
@@ -10,7 +10,7 @@ inputs:
   cf-stack-name-suffix:
     description: CloudFormation stack name suffix with trailing '-' (e.g. -database)
     required: false
-    default: ''
+    default: ""
 
 runs:
   using: composite
@@ -18,4 +18,4 @@ runs:
     - name: Describe infrastructure events
       shell: bash
       run: |
-        aws cloudformation describe-stack-events --stack-name ${{ format('{0}-{1}{2}', inputs.microservice-name, inputs.environment, inputs.cf-stack-name-suffix) }}
+        aws cloudformation describe-stack-events --stack-name ${{ format('{0}-{1}{2}', inputs.short-service-name, inputs.environment, inputs.cf-stack-name-suffix) }}

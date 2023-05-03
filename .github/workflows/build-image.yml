@@ -42,12 +42,15 @@ jobs:
 
       - name: Build image
         shell: bash
+        env:
+          COMMIT_HASH_TAG: ${{ steps.login-ecr.outputs.registry }}/${{ inputs.ecr-repository }}:${{ steps.get-current-commit-hash.outputs.commit-hash }}
+          BRANCH_NAME_TAG: ${{ steps.login-ecr.outputs.registry }}/${{ inputs.ecr-repository }}:${{ steps.get-current-branch-name.outputs.branch-name }}
         run: |
-          docker pull ${{ steps.login-ecr.outputs.registry }}/${{ inputs.ecr-repository }}:${{ steps.get-current-branch-name.outputs.branch-name }} || true
+          docker pull $BRANCH_NAME_TAG || true
           docker build \
-            -t ${{ steps.login-ecr.outputs.registry }}/${{ inputs.ecr-repository }}:${{ steps.get-current-commit-hash.outputs.commit-hash }} \
-            -t ${{ steps.login-ecr.outputs.registry }}/${{ inputs.ecr-repository }}:${{ steps.get-current-branch-name.outputs.branch-name }} \
-            --cache-from ${{ steps.login-ecr.outputs.registry }}/${{ inputs.ecr-repository }}:${{ steps.get-current-branch-name.outputs.branch-name }} \
+            -t COMMIT_HASH_TAG \
+            -t $BRANCH_NAME_TAG \
+            --cache-from $BRANCH_NAME_TAG \
             ${{ inputs.docker-path }}
-          docker push ${{ steps.login-ecr.outputs.registry }}/${{ inputs.ecr-repository }}:${{ steps.get-current-commit-hash.outputs.commit-hash }}
-          docker push ${{ steps.login-ecr.outputs.registry }}/${{ inputs.ecr-repository }}:${{ steps.get-current-branch-name.outputs.branch-name }}
+          docker push COMMIT_HASH_TAG
+          docker push $BRANCH_NAME_TAG

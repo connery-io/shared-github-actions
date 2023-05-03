@@ -3,7 +3,7 @@ name: Deploy service infrastructure
 on:
   workflow_call:
     inputs:
-      microservice-name:
+      short-service-name:
         description: Microservice short name
         type: string
         required: true
@@ -51,7 +51,7 @@ jobs:
         timeout-minutes: 15
         uses: connery-io/shared-github-actions/deploy-infrastructure@main
         with:
-          microservice-name: ${{ inputs.microservice-name }}
+          short-service-name: ${{ inputs.short-service-name }}
           environment: ${{ inputs.environment }}
           cf-stack-name-suffix: ${{ inputs.cf-stack-name-suffix }}
           cf-parameters: ImageTag=${{ steps.get-current-commit-hash.outputs.commit-hash }}
@@ -60,7 +60,7 @@ jobs:
         if: failure()
         uses: connery-io/shared-github-actions/describe-infrastructure-events@main
         with:
-          microservice-name: ${{ inputs.microservice-name }}
+          short-service-name: ${{ inputs.short-service-name }}
           environment: ${{ inputs.environment }}
           cf-stack-name-suffix: ${{ inputs.cf-stack-name-suffix }}
 
@@ -68,6 +68,6 @@ jobs:
         if: cancelled()
         uses: connery-io/shared-github-actions/cancel-infrastructure-update@main
         with:
-          microservice-name: ${{ inputs.microservice-name }}
+          short-service-name: ${{ inputs.short-service-name }}
           environment: ${{ inputs.environment }}
           cf-stack-name-suffix: ${{ inputs.cf-stack-name-suffix }}
