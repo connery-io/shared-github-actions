@@ -1,0 +1,15 @@
+name: Get current repository name
+description: Get current repository name
+outputs:
+  repository-name:
+    description: Repository name
+    value: ${{ steps.get-repository-name.outputs.result }}
+runs:
+  using: composite
+  steps:
+    - name: Get repository name
+      id: get-repository-name
+      uses: actions/github-script@v6
+      with:
+        script: |
+          return context.repo.repo
