@@ -59,7 +59,7 @@ jobs:
         with:
           repository: ${{ inputs.repository }}
           environment: ${{ inputs.environment }}
-          stack: ${{ inputs.stack }}
+          stack: service
 
       - name: Cancel infrastructure update
         if: cancelled()
@@ -67,4 +67,4 @@ jobs:
         with:
           repository: ${{ inputs.repository }}
           environment: ${{ inputs.environment }}
-          stack: ${{ inputs.stack }}
+          stack: service
