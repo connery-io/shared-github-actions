@@ -11,7 +11,7 @@ inputs:
     description: CloudFormation stack name (e.g. service)
     required: true
   parameters:
-    description: CloudFormation parameters divided by whitespace, Environment parameter should not be specified (e.g. ImageTag=123 CustomParameter=value)
+    description: Custom CloudFormation parameters divided by whitespace (e.g. ImageTag=123 CustomParameter=value)
     required: false
     default: ""
   aws-region:
@@ -39,5 +39,5 @@ runs:
           --stack-name ${{ format('{0}-{1}-{2}', inputs.repository, inputs.environment, inputs.stack) }} \
           --s3-bucket connery-cloud-formation-artifacts-${{ inputs.aws-region }} \
           --s3-prefix ${{ inputs.repository }} \
-          --parameter-overrides Environment=${{ inputs.environment }} ${{ inputs.parameters }} \
+          --parameter-overrides Repository=${{ inputs.repository }} Environment=${{ inputs.environment }} Stack=${{ inputs.stack }} ${{ inputs.parameters }} \
           --capabilities CAPABILITY_IAM

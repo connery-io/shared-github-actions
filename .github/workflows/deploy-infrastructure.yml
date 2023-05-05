@@ -16,7 +16,7 @@ on:
         type: string
         required: true
       parameters:
-        description: CloudFormation parameters divided by whitespace, Environment parameter should not be specified (e.g. ImageTag=123 CustomParameter=value)
+        description: Custom CloudFormation parameters divided by whitespace (e.g. ImageTag=123 CustomParameter=value)
         type: string
         required: false
         default: ""
