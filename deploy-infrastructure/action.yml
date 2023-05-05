@@ -1,21 +1,17 @@
 name: Deploy infrastructure
 
 inputs:
-  service:
-    description: Short service name
+  repository:
+    description: GitHub repository name
     required: true
   environment:
     description: Environment
     required: true
-  cf-stack-name-suffix:
-    description: CloudFormation stack suffix with trailing '-' (e.g. -database)
-    required: false
-    default: ""
-  cf-template-path:
-    description: CloudFormation template path in the repository (e.g. ./infrastructure/service.yml)
+  stack:
+    description: CloudFormation stack name (e.g. service)
     required: true
-  cf-parameters:
-    description: CloudFormation parameters divided by whitespace (e.g. ImageTag=123 CustomParameter=value)
+  parameters:
+    description: CloudFormation parameters divided by whitespace, Environment parameter should not be specified (e.g. ImageTag=123 CustomParameter=value)
     required: false
     default: ""
   aws-region:
@@ -30,9 +26,9 @@ runs:
       shell: bash
       run: |
         aws cloudformation package \
-          --template-file ${{ inputs.cf-template-path }} \
+          --template-file ./infrastructure/${{ inputs.stack }}.yml \
           --s3-bucket connery-cloud-formation-artifacts-${{ inputs.aws-region }} \
-          --s3-prefix ${{ inputs.service }} \
+          --s3-prefix ${{ inputs.repository }} \
           --output-template-file ./infrastructure/compiled.yml
 
     - name: Deploy infrastructure
@@ -40,8 +36,8 @@ runs:
       run: |
         aws cloudformation deploy \
           --template-file ./infrastructure/compiled.yml \
-          --stack-name ${{ format('{0}-{1}{2}', inputs.service, inputs.environment, inputs.cf-stack-name-suffix) }} \
+          --stack-name ${{ format('{0}-{1}-{2}', inputs.repository, inputs.environment, inputs.stack) }} \
           --s3-bucket connery-cloud-formation-artifacts-${{ inputs.aws-region }} \
-          --s3-prefix ${{ inputs.service }} \
-          --parameter-overrides Environment=${{ inputs.environment }} ${{ inputs.cf-parameters }} \
+          --s3-prefix ${{ inputs.repository }} \
+          --parameter-overrides Environment=${{ inputs.environment }} ${{ inputs.parameters }} \
           --capabilities CAPABILITY_IAM

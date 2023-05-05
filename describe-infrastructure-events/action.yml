@@ -1,16 +1,15 @@
 name: Describe infrastructure events
 
 inputs:
-  service:
-    description: Short service name
+  repository:
+    description: GitHub repository name
     required: true
   environment:
     description: Environment
     required: true
-  cf-stack-name-suffix:
-    description: CloudFormation stack name suffix with trailing '-' (e.g. -database)
-    required: false
-    default: ""
+  stack:
+    description: CloudFormation stack name (e.g. service)
+    required: true
 
 runs:
   using: composite
@@ -18,4 +17,4 @@ runs:
     - name: Describe infrastructure events
       shell: bash
       run: |
-        aws cloudformation describe-stack-events --stack-name ${{ format('{0}-{1}{2}', inputs.service, inputs.environment, inputs.cf-stack-name-suffix) }}
+        aws cloudformation describe-stack-events --stack-name ${{ format('{0}-{1}-{2}', inputs.repository, inputs.environment, inputs.stack) }}
