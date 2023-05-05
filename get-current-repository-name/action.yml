@@ -12,4 +12,5 @@ runs:
       uses: actions/github-script@v6
       with:
         script: |
+          core.info(context.repo.repo);
           return context.repo.repo
