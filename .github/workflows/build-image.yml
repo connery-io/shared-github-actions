@@ -3,6 +3,10 @@ name: Build image
 on:
   workflow_call:
     inputs:
+      repository: # TODO: remove
+        description: GitHub repository name
+        type: string
+        required: false
       dockerfile-path:
         description: Dockerfile path
         type: string
