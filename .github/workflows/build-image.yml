@@ -30,15 +30,15 @@ jobs:
 
       - name: Get current repository name
         id: get-current-repository-name
-        uses: viovendi/shared-github-actions/get-current-repository-name@master
+        uses: connery-io/shared-github-actions/get-current-repository-name@main
 
       - name: Get current commit hash
         id: get-current-commit-hash
-        uses: viovendi/shared-github-actions/get-current-commit-hash@master
+        uses: connery-io/shared-github-actions/get-current-commit-hash@main
 
       - name: Get current branch name
         id: get-current-branch-name
-        uses: viovendi/shared-github-actions/get-current-branch-name@master
+        uses: connery-io/shared-github-actions/get-current-branch-name@main
 
       - name: Build image
         shell: bash
