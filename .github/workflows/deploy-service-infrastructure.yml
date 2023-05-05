@@ -16,10 +16,6 @@ on:
         type: string
         required: false
         default: ""
-      ecr-repository:
-        description: ECR repository
-        type: string
-        required: true
       aws-region:
         description: AWS region
         type: string
@@ -49,7 +45,7 @@ jobs:
         shell: bash
         run: |
           aws ecr describe-images \
-            --repository-name ${{ inputs.ecr-repository }} \
+            --repository-name connery/${{ inputs.service }} \
             --image-ids imageTag=${{ steps.get-current-commit-hash.outputs.commit-hash }}
 
       - name: Deploy infrastructure
