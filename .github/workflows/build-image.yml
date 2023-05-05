@@ -3,8 +3,8 @@ name: Build image
 on:
   workflow_call:
     inputs:
-      ecr-repository:
-        description: ECR repository
+      service:
+        description: Short service name
         type: string
         required: true
       docker-path:
@@ -43,8 +43,8 @@ jobs:
       - name: Build image
         shell: bash
         env:
-          COMMIT_HASH_TAG: ${{ steps.login-ecr.outputs.registry }}/${{ inputs.ecr-repository }}:${{ steps.get-current-commit-hash.outputs.commit-hash }}
-          BRANCH_NAME_TAG: ${{ steps.login-ecr.outputs.registry }}/${{ inputs.ecr-repository }}:${{ steps.get-current-branch-name.outputs.branch-name }}
+          COMMIT_HASH_TAG: ${{ steps.login-ecr.outputs.registry }}/connery/${{ inputs.service }}:${{ steps.get-current-commit-hash.outputs.commit-hash }}
+          BRANCH_NAME_TAG: ${{ steps.login-ecr.outputs.registry }}/connery/${{ inputs.service }}:${{ steps.get-current-branch-name.outputs.branch-name }}
         run: |
           docker pull $BRANCH_NAME_TAG || true
           docker build \

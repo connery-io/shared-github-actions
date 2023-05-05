@@ -1,7 +1,7 @@
 name: Cancel infrastructure update
 
 inputs:
-  short-service-name:
+  service:
     description: Short service name
     required: true
   environment:
@@ -18,5 +18,5 @@ runs:
     - name: Cancel infrastructure update
       shell: bash
       run: |
-        aws cloudformation cancel-update-stack --stack-name ${{ format('{0}-{1}{2}', inputs.short-service-name, inputs.environment, inputs.cf-stack-name-suffix) }}
-        aws cloudformation wait stack-rollback-complete --stack-name ${{ format('{0}-{1}{2}', inputs.short-service-name, inputs.environment, inputs.cf-stack-name-suffix) }}
+        aws cloudformation cancel-update-stack --stack-name ${{ format('{0}-{1}{2}', inputs.service, inputs.environment, inputs.cf-stack-name-suffix) }}
+        aws cloudformation wait stack-rollback-complete --stack-name ${{ format('{0}-{1}{2}', inputs.service, inputs.environment, inputs.cf-stack-name-suffix) }}

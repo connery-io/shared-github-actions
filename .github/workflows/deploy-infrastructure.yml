@@ -3,7 +3,7 @@ name: Deploy infrastructure
 on:
   workflow_call:
     inputs:
-      short-service-name:
+      service:
         description: Short service name
         type: string
         required: true
@@ -17,7 +17,7 @@ on:
         required: false
         default: ""
       cf-template-path:
-        description: CloudFormation template path in the repository (e.g. ./infrastructure/infrastructure.yml)
+        description: CloudFormation template path in the repository (e.g. ./infrastructure/service.yml)
         type: string
         required: true
       cf-parameters:
@@ -50,7 +50,7 @@ jobs:
         timeout-minutes: 20
         uses: connery-io/shared-github-actions/deploy-infrastructure@main
         with:
-          short-service-name: ${{ inputs.short-service-name }}
+          service: ${{ inputs.service }}
           environment: ${{ inputs.environment }}
           cf-stack-name-suffix: ${{ inputs.cf-stack-name-suffix }}
           cf-template-path: ${{ inputs.cf-template-path }}
@@ -61,7 +61,7 @@ jobs:
         if: failure()
         uses: connery-io/shared-github-actions/describe-infrastructure-events@main
         with:
-          short-service-name: ${{ inputs.short-service-name }}
+          service: ${{ inputs.service }}
           environment: ${{ inputs.environment }}
           cf-stack-name-suffix: ${{ inputs.cf-stack-name-suffix }}
 
@@ -69,6 +69,6 @@ jobs:
         if: cancelled()
         uses: connery-io/shared-github-actions/cancel-infrastructure-update@main
         with:
-          short-service-name: ${{ inputs.short-service-name }}
+          service: ${{ inputs.service }}
           environment: ${{ inputs.environment }}
           cf-stack-name-suffix: ${{ inputs.cf-stack-name-suffix }}

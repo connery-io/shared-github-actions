@@ -1,7 +1,7 @@
 name: Describe infrastructure events
 
 inputs:
-  short-service-name:
+  service:
     description: Short service name
     required: true
   environment:
@@ -18,4 +18,4 @@ runs:
     - name: Describe infrastructure events
       shell: bash
       run: |
-        aws cloudformation describe-stack-events --stack-name ${{ format('{0}-{1}{2}', inputs.short-service-name, inputs.environment, inputs.cf-stack-name-suffix) }}
+        aws cloudformation describe-stack-events --stack-name ${{ format('{0}-{1}{2}', inputs.service, inputs.environment, inputs.cf-stack-name-suffix) }}
