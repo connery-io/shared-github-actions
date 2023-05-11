@@ -7,6 +7,9 @@ inputs:
   environment:
     description: Environment
     required: true
+  organization:
+    description: Organization
+    required: false
   stack:
     description: CloudFormation stack name (e.g. service)
     required: true
@@ -34,10 +37,21 @@ runs:
     - name: Deploy infrastructure
       shell: bash
       run: |
-        aws cloudformation deploy \
-          --template-file ./infrastructure/compiled.yml \
-          --stack-name ${{ format('{0}-{1}-{2}', inputs.repository, inputs.environment, inputs.stack) }} \
-          --s3-bucket connery-cloud-formation-artifacts-${{ inputs.aws-region }} \
-          --s3-prefix ${{ inputs.repository }} \
-          --parameter-overrides Repository=${{ inputs.repository }} Environment=${{ inputs.environment }} Stack=${{ inputs.stack }} ${{ inputs.parameters }} \
-          --capabilities CAPABILITY_IAM
+        if [[ "${{ inputs.organization }}" ]]
+        then
+          aws cloudformation deploy \
+            --template-file ./infrastructure/compiled.yml \
+            --stack-name ${{ format('{0}-{1}-{2}-{3}', inputs.repository, inputs.environment, inputs.organization, inputs.stack) }} \
+            --s3-bucket connery-cloud-formation-artifacts-${{ inputs.aws-region }} \
+            --s3-prefix ${{ inputs.repository }} \
+            --parameter-overrides Repository=${{ inputs.repository }} Environment=${{ inputs.environment }} Organization=${{ inputs.organization }} Stack=${{ inputs.stack }} ${{ inputs.parameters }} \
+            --capabilities CAPABILITY_IAM
+        else
+          aws cloudformation deploy \
+            --template-file ./infrastructure/compiled.yml \
+            --stack-name ${{ format('{0}-{1}-{2}', inputs.repository, inputs.environment, inputs.stack) }} \
+            --s3-bucket connery-cloud-formation-artifacts-${{ inputs.aws-region }} \
+            --s3-prefix ${{ inputs.repository }} \
+            --parameter-overrides Repository=${{ inputs.repository }} Environment=${{ inputs.environment }} Stack=${{ inputs.stack }} ${{ inputs.parameters }} \
+            --capabilities CAPABILITY_IAM
+        fi

@@ -7,6 +7,9 @@ inputs:
   environment:
     description: Environment
     required: true
+  organization:
+    description: Organization
+    required: false
   stack:
     description: CloudFormation stack name (e.g. service)
     required: true
@@ -17,4 +20,9 @@ runs:
     - name: Describe infrastructure events
       shell: bash
       run: |
-        aws cloudformation describe-stack-events --stack-name ${{ format('{0}-{1}-{2}', inputs.repository, inputs.environment, inputs.stack) }}
+        if [[ "${{ inputs.organization }}" ]]
+        then
+          aws cloudformation describe-stack-events --stack-name ${{ format('{0}-{1}-{2}-{3}', inputs.repository, inputs.environment, inputs.organization, inputs.stack) }}
+        else
+          aws cloudformation describe-stack-events --stack-name ${{ format('{0}-{1}-{2}', inputs.repository, inputs.environment, inputs.stack) }}
+        fi

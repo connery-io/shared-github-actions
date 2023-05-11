@@ -11,6 +11,10 @@ on:
         description: Environment
         type: string
         required: true
+      organization:
+        description: Organization
+        type: string
+        required: false
       aws-region:
         description: AWS region
         type: string
@@ -49,6 +53,7 @@ jobs:
         with:
           repository: ${{ inputs.repository }}
           environment: ${{ inputs.environment }}
+          organization: ${{ inputs.organization }}
           stack: service
           parameters: ImageTag=${{ steps.get-current-commit-hash.outputs.commit-hash }}
           aws-region: ${{ inputs.aws-region }}
@@ -59,6 +64,7 @@ jobs:
         with:
           repository: ${{ inputs.repository }}
           environment: ${{ inputs.environment }}
+          organization: ${{ inputs.organization }}
           stack: service
 
       - name: Cancel infrastructure update
@@ -67,4 +73,5 @@ jobs:
         with:
           repository: ${{ inputs.repository }}
           environment: ${{ inputs.environment }}
+          organization: ${{ inputs.organization }}
           stack: service

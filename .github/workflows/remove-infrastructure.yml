@@ -11,6 +11,10 @@ on:
         description: Environment
         type: string
         required: true
+      organization:
+        description: Organization
+        type: string
+        required: false
       stack:
         description: CloudFormation stack name (e.g. service)
         type: string
@@ -37,8 +41,14 @@ jobs:
         timeout-minutes: 15
         shell: bash
         run: |
-          aws cloudformation delete-stack --stack-name ${{ format('{0}-{1}-{2}', inputs.repository, inputs.environment, inputs.stack) }}
-          aws cloudformation wait stack-delete-complete --stack-name ${{ format('{0}-{1}-{2}', inputs.repository, inputs.environment, inputs.stack) }}
+          if [[ "${{ inputs.organization }}" ]]
+          then
+            aws cloudformation delete-stack --stack-name ${{ format('{0}-{1}-{2}-{3}', inputs.repository, inputs.environment, inputs.organization, inputs.stack) }}
+            aws cloudformation wait stack-delete-complete --stack-name ${{ format('{0}-{1}-{2}-{3}', inputs.repository, inputs.environment, inputs.organization, inputs.stack) }}
+          else
+            aws cloudformation delete-stack --stack-name ${{ format('{0}-{1}-{2}', inputs.repository, inputs.environment, inputs.stack) }}
+            aws cloudformation wait stack-delete-complete --stack-name ${{ format('{0}-{1}-{2}', inputs.repository, inputs.environment, inputs.stack) }}
+          fi
 
       - name: Describe infrastructure events
         if: failure()
@@ -46,4 +56,5 @@ jobs:
         with:
           repository: ${{ inputs.repository }}
           environment: ${{ inputs.environment }}
+          organization: ${{ inputs.organization }}
           stack: ${{ inputs.stack }}

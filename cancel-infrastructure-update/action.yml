@@ -7,6 +7,9 @@ inputs:
   environment:
     description: Environment
     required: true
+  organization:
+    description: Organization
+    required: false
   stack:
     description: CloudFormation stack name (e.g. service)
     required: true
@@ -17,5 +20,11 @@ runs:
     - name: Cancel infrastructure update
       shell: bash
       run: |
-        aws cloudformation cancel-update-stack --stack-name ${{ format('{0}-{1}-{2}', inputs.repository, inputs.environment, inputs.stack) }}
-        aws cloudformation wait stack-rollback-complete --stack-name ${{ format('{0}-{1}-{2}', inputs.repository, inputs.environment, inputs.stack) }}
+        if [[ "${{ inputs.organization }}" ]]
+        then
+          aws cloudformation cancel-update-stack --stack-name ${{ format('{0}-{1}-{2}-{3}', inputs.repository, inputs.environment, inputs.organization, inputs.stack) }}
+          aws cloudformation wait stack-rollback-complete --stack-name ${{ format('{0}-{1}-{2}-{3}', inputs.repository, inputs.environment, inputs.organization, inputs.stack) }}
+        else
+          aws cloudformation cancel-update-stack --stack-name ${{ format('{0}-{1}-{2}', inputs.repository, inputs.environment, inputs.stack) }}
+          aws cloudformation wait stack-rollback-complete --stack-name ${{ format('{0}-{1}-{2}', inputs.repository, inputs.environment, inputs.stack) }}
+        fi
