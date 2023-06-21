@@ -11,10 +11,6 @@ on:
         description: Environment
         type: string
         required: true
-      organization:
-        description: Organization
-        type: string
-        required: false
       stack:
         description: CloudFormation stack name (e.g. service)
         type: string
@@ -51,7 +47,6 @@ jobs:
         with:
           repository: ${{ inputs.repository }}
           environment: ${{ inputs.environment }}
-          organization: ${{ inputs.organization }}
           stack: ${{ inputs.stack }}
           parameters: ${{ inputs.parameters }}
           aws-region: ${{ inputs.aws-region }}
@@ -62,7 +57,6 @@ jobs:
         with:
           repository: ${{ inputs.repository }}
           environment: ${{ inputs.environment }}
-          organization: ${{ inputs.organization }}
           stack: ${{ inputs.stack }}
 
       - name: Cancel infrastructure update
@@ -71,5 +65,4 @@ jobs:
         with:
           repository: ${{ inputs.repository }}
           environment: ${{ inputs.environment }}
-          organization: ${{ inputs.organization }}
           stack: ${{ inputs.stack }}
