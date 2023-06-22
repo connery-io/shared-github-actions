@@ -11,7 +11,7 @@ on:
         description: Dockerfile path
         type: string
         required: false
-        default: Dockerfile
+        default: ./Dockerfile
       context:
         description: Docker build context
         type: string
