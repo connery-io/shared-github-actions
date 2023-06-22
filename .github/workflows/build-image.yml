@@ -11,6 +11,11 @@ on:
         description: Dockerfile path
         type: string
         required: false
+        default: ./Dockerfile
+      context:
+        description: Docker build context
+        type: string
+        required: false
         default: .
 
 jobs:
@@ -55,6 +60,7 @@ jobs:
             -t $COMMIT_HASH_TAG \
             -t $BRANCH_NAME_TAG \
             --cache-from $BRANCH_NAME_TAG \
-            ${{ inputs.dockerfile-path }}
+            -f ${{ inputs.dockerfile-path }}
+            ${{ inputs.context }}
           docker push $COMMIT_HASH_TAG
           docker push $BRANCH_NAME_TAG
