@@ -9,7 +9,7 @@ runs:
   steps:
     - name: Get repository name
       id: get-repository-name
-      uses: actions/github-script@v6
+      uses: actions/github-script@v7
       with:
         script: |
           core.info(context.repo.repo);
